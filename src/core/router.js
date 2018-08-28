@@ -67,7 +67,7 @@ class Router {
             actionName = 'mainAction';
         }
         try {
-            controller = require('../controllers/' + controllerName + 'Controller.js');
+            controller = require('../controllers/' + controllerName + '.controller.js');
             controller = new controller();
             action = controller[actionName];
 
