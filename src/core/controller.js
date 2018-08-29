@@ -1,6 +1,8 @@
 class Controller {
-    mainAction(req, res) {
-        res.send('main ctrl');
+    constructor(req, res, format) {
+        this.request = req;
+        this.response = res;
+        this.format = format;
     }
 }
 

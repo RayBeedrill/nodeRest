@@ -1,3 +1,4 @@
+let responseCodes = require('../services/responseCode.service');
 /*
  * Router class for dynamic and static routing in api.
  * 
@@ -7,6 +8,8 @@ class Router {
     constructor() {
         this._request;
         this._response;
+        this._method;
+        this._format;
         this.url;
     }
 
@@ -46,12 +49,42 @@ class Router {
     }
 
     /*
+    * set request method
+    */
+    _setRequestMethod() {
+        this._method = this._request.method;
+    }
+
+    /*
+    * capitalizes first leeter of the word
+    */
+    _capitalizeLetter(word) {
+        return word.charAt(0).toUpperCase() + word.slice(1);
+    }
+
+    /*
+    *   set format of the response to the client
+    *   can be JSON, XML, HTML, plain text
+    */
+    _setResponseFormat() {
+        this._format = this.url[3] || '.txt';
+    }
+
+    _init() {
+        let self = this;
+        this._setUrl();
+        this._setRequestMethod();
+        this._setResponseFormat();
+    }
+
+    /*
      *  inits dynamic router
      */
     dynamicRouterInit() {
-        this._setUrl();
+        this._init();
         let controllerName = this._getController();
         let actionName = this._getAction();
+        let method = this._method.toLowerCase();
         let controller;
         let action;
 
@@ -62,21 +95,23 @@ class Router {
         }
 
         if (actionName) {
-            actionName = actionName.toLowerCase() + 'Action';
+            let lowerCaseAction = actionName.toLowerCase();
+            actionName = method + this._capitalizeLetter(lowerCaseAction);
         } else {
-            actionName = 'mainAction';
+            actionName = method + 'Main';
         }
         try {
             controller = require('../controllers/' + controllerName + '.controller.js');
-            controller = new controller();
+            controller = new controller(this._request, this._response, this._format);
             action = controller[actionName];
 
             if (!action) {
                 this._is404();
                 return;
             }
-            action(this._request, this._response);
+            action();
         } catch (err) {
+            console.log(err);
             this._is404();
         }
     }
@@ -85,7 +120,9 @@ class Router {
      * shows 404 page. 
      */
     _is404() {
-        this._response.send('404');
+        let codeObj = responseCodes.getCode('404');
+        this._response.status(codeObj.code);
+        this._response.send(codeObj.description);
     }
 }
 

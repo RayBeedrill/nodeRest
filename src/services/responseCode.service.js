@@ -1,6 +1,6 @@
 class ResponseCode {
-    constructor() {
-        this.codeList = {
+    static getCode(code) {
+        let codeList = {
             '100': { code: 100, description: 'Continue' },
             '101': { code: 101, description: 'Switching Protocol' },
             '102': { code: 102, description: 'Processing' },
@@ -45,9 +45,9 @@ class ResponseCode {
             '504': { code: 504, description: 'Gateway Timeout' },
             '505': { code: 505, description: 'HTTP Version Not Supported' }
         };
-    }
 
-    static getCode(code) {
-        return this.codeList[code];
+        return codeList[code];
     }
 }
+
+module.exports = ResponseCode;
