@@ -103,15 +103,14 @@ class Router {
         try {
             controller = require('../controllers/' + controllerName + '.controller.js');
             controller = new controller(this._request, this._response, this._format);
-            action = controller[actionName];
 
-            if (!action) {
+            if (!controller[actionName]) {
                 this._is404();
                 return;
             }
-            action();
+
+            controller[actionName]();
         } catch (err) {
-            console.log(err);
             this._is404();
         }
     }
