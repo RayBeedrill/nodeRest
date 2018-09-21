@@ -1,10 +1,16 @@
-let responseCodes = require('../services/responseCode.service');
+import responseCodes from '../services/responseCode.service';
 /*
  * Router class for dynamic and static routing in api.
  * 
  *
  */
-class Router {
+export default class Router {
+    _request;
+    _response;
+    _method;
+    _format;
+    url;
+
     constructor() {
         this._request;
         this._response;
@@ -101,7 +107,7 @@ class Router {
             actionName = method + 'Main';
         }
         try {
-            controller = require('../controllers/' + controllerName + '.controller.js');
+            controller = import('../controllers/' + controllerName + '.controller.js');
             controller = new controller(this._request, this._response, this._format);
 
             if (!controller[actionName]) {
@@ -124,5 +130,3 @@ class Router {
         this._response.send(codeObj.description);
     }
 }
-
-module.exports = Router;

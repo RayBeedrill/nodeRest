@@ -1,5 +1,6 @@
-let Router = require('./core/router');
-let express = require('express');
+import Router from './core/router';
+import express from 'express';
+
 let app = express();
 let router = new Router();
 
