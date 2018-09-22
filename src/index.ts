@@ -1,8 +1,8 @@
-import Router from './core/router';
-import express from 'express';
+let router = require('./core/router');
+let express = require('express');
 
 let app = express();
-let router = new Router();
+let dynamicRouter = new router();
 
 app.use((req, res, next) => {
     res.append('Access-Control-Allow-Origin', ['*']);
@@ -12,9 +12,9 @@ app.use((req, res, next) => {
 });
 
 app.all('*', function(request, response) {
-    router.setRequest(request);
-    router.setResponse(response);
-    router.dynamicRouterInit();
+    dynamicRouter.setRequest(request);
+    dynamicRouter.setResponse(response);
+    dynamicRouter.dynamicRouterInit();
 }).listen(3000, function() {
     console.log('watching port 3000');
 });

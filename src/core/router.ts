@@ -1,15 +1,15 @@
-import responseCodes from '../services/responseCode.service';
 /*
  * Router class for dynamic and static routing in api.
  * 
  *
  */
-export default class Router {
+class Router {
     _request;
     _response;
     _method;
     _format;
     url;
+    responseCode;
 
     constructor() {
         this._request;
@@ -17,6 +17,7 @@ export default class Router {
         this._method;
         this._format;
         this.url;
+        this.responseCode = require('../services/responseCode.service');
     }
 
     /*
@@ -92,7 +93,6 @@ export default class Router {
         let actionName = this._getAction();
         let method = this._method.toLowerCase();
         let controller;
-        let action;
 
         if (controllerName) {
             controllerName = controllerName.toLowerCase();
@@ -107,7 +107,7 @@ export default class Router {
             actionName = method + 'Main';
         }
         try {
-            controller = import('../controllers/' + controllerName + '.controller.js');
+            controller = require('../controllers/' + controllerName + '.controller.js');
             controller = new controller(this._request, this._response, this._format);
 
             if (!controller[actionName]) {
@@ -125,8 +125,10 @@ export default class Router {
      * shows 404 page. 
      */
     _is404() {
-        let codeObj = responseCodes.getCode('404');
+        let codeObj = this.responseCode.getCode('404');
         this._response.status(codeObj.code);
         this._response.send(codeObj.description);
     }
 }
+
+module.exports = Router;

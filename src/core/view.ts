@@ -1,4 +1,8 @@
 class View {
+    format;
+    data;
+    codeObj;
+    response;
     constructor(format, data, codeObj, resp) {
         this.format = format;
         this.data = data;

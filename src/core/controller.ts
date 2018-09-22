@@ -1,4 +1,7 @@
 class Controller {
+    request;
+    response;
+    format;
     constructor(req, res, format) {
         this.request = req;
         this.response = res;
