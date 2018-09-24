@@ -1,8 +1,12 @@
+import { Response } from 'express';
 class View {
-    format;
-    data;
-    codeObj;
-    response;
+    format: string;
+    data: Object;
+    codeObj: {
+        code: number;
+        description: string;
+    };
+    response: Response;
     constructor(format, data, codeObj, resp) {
         this.format = format;
         this.data = data;

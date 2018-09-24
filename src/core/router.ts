@@ -1,71 +1,70 @@
+import { Request, Response } from 'express';
+
 /*
  * Router class for dynamic and static routing in api.
  * 
  *
  */
-class Router {
-    _request;
-    _response;
-    _method;
-    _format;
-    url;
-    responseCode;
+export default class Router {
+    private _request: Request;
+    private _response: Response;
+    private _method: string;
+    private _format: string;
+    public url: Array<string>;
+    public responseCode: {
+        getCode: Function;
+    };
 
     constructor() {
-        this._request;
-        this._response;
-        this._method;
-        this._format;
-        this.url;
         this.responseCode = require('../services/responseCode.service');
     }
 
     /*
      *   gets array of controller/actions params
      */
-    _setUrl() {
+    private _setUrl() {
         this.url = this._request.originalUrl.split('/');
     }
 
     /*
      *   setter for request obj
      */
-    setRequest(req) {
+    public setRequest(req) {
         this._request = req;
     }
 
     /*
      *  setter for response obj
      */
-    setResponse(res) {
+    public setResponse(res) {
         this._response = res;
     }
 
     /*
      *  gets controller name from request
      */
-    _getController() {
+    private _getController() {
         return this.url[1];
     }
 
     /*
      *  gets action name from request
      */
-    _getAction() {
+    private _getAction() {
         return this.url[2];
     }
 
     /*
     * set request method
     */
-    _setRequestMethod() {
+    private _setRequestMethod() {
         this._method = this._request.method;
     }
 
     /*
     * capitalizes first leeter of the word
     */
-    _capitalizeLetter(word) {
+    private _capitalizeLetter(word) {
         return word.charAt(0).toUpperCase() + word.slice(1);
     }
 
@@ -73,11 +72,11 @@ class Router {
     *   set format of the response to the client
     *   can be JSON, XML, HTML, plain text
     */
-    _setResponseFormat() {
+    private _setResponseFormat() {
         this._format = this.url[3] || '.txt';
     }
 
-    _init() {
+    private _init() {
         let self = this;
         this._setUrl();
         this._setRequestMethod();
@@ -87,12 +86,12 @@ class Router {
     /*
      *  inits dynamic router
      */
-    dynamicRouterInit() {
+    public dynamicRouterInit() {
         this._init();
-        let controllerName = this._getController();
-        let actionName = this._getAction();
-        let method = this._method.toLowerCase();
-        let controller;
+        let controllerName: string = this._getController();
+        let actionName: string = this._getAction();
+        let method: string = this._method.toLowerCase();
+        let controller: any;
 
         if (controllerName) {
             controllerName = controllerName.toLowerCase();
@@ -108,14 +107,18 @@ class Router {
         }
         try {
             controller = require('../controllers/' + controllerName + '.controller.js');
-            controller = new controller(this._request, this._response, this._format);
+            let controllerObj: mainController = new controller(
+                this._request,
+                this._response,
+                this._format
+            );
 
-            if (!controller[actionName]) {
+            if (!controllerObj[actionName]) {
                 this._is404();
                 return;
             }
 
-            controller[actionName]();
+            controllerObj[actionName]();
         } catch (err) {
             this._is404();
         }
@@ -124,8 +127,11 @@ class Router {
     /*
      * shows 404 page. 
      */
-    _is404() {
-        let codeObj = this.responseCode.getCode('404');
+    private _is404() {
+        let codeObj: {
+            code: number;
+            description: string;
+        } = this.responseCode.getCode('404');
         this._response.status(codeObj.code);
         this._response.send(codeObj.description);
     }

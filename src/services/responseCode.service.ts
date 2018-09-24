@@ -1,6 +1,6 @@
 class ResponseCode {
     static getCode(code) {
-        let codeList = {
+        let codeList: Object = {
             '100': { code: 100, description: 'Continue' },
             '101': { code: 101, description: 'Switching Protocol' },
             '102': { code: 102, description: 'Processing' },

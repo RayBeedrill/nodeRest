@@ -1,15 +1,16 @@
-let controller = require('../core/controller');
-let view = require('../core/view');
+let controller: any = require('../core/controller');
+let view: any = require('../core/view');
 
 class mainController extends controller {
-    View;
-    ResponseCodes;
+    public ResponseCodes: {
+        getCode: Function;
+    };
     constructor(req, res, format) {
         super(req, res, format);
         this.ResponseCodes = require('../services/responseCode.service');
     }
-    getCars() {
-        new view(this.format, '1321', this.ResponseCodes.getCode(200), this.response);
+    public getCars() {
+        new view(this.format, 'test', this.ResponseCodes.getCode(200), this.response);
     }
 }
 

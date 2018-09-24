@@ -1,7 +1,8 @@
+import { Request, Response } from 'express';
 class Controller {
-    request;
-    response;
-    format;
+    public request: Request;
+    public response: Response;
+    public format: string;
     constructor(req, res, format) {
         this.request = req;
         this.response = res;
