@@ -1,5 +1,12 @@
 import Router from './core/router';
 import { Request, Response } from 'express';
+
+try {
+    require('dotenv').config();
+} catch (error) {
+    console.log('dotenv is missing');
+}
+
 let router: any = require('./core/router');
 let express: any = require('express');
 
@@ -25,6 +32,6 @@ app.all('*', function(request: Request, response: Response) {
     dynamicRouter.setRequest(request);
     dynamicRouter.setResponse(response);
     dynamicRouter.dynamicRouterInit();
-}).listen(3000, function() {
-    console.log('watching port 3000');
+}).listen(process.env.PORT, function() {
+    console.log('watching port:' + process.env.PORT);
 });
